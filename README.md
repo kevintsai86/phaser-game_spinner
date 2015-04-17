@@ -6,10 +6,10 @@ Simple spinner thing developed for Phaser game. Click the "Spin" button to give 
 ------------------------
 Clone the repository and run
 
-'sudo npm install'
+`sudo npm install`
 
 then run 
 
-'grunt'
+`grunt`
 
 and the application should run by itself
