@@ -1,0 +1,27 @@
+//JSON for questions to be used in game
+//
+// should be structured so that each category has it's own variable and the questions are placed into each variable
+// 
+
+/* since I don't know how many categories there will be and stuff there will only be 1 category that holds
+all the questions */
+{
+	"sample": [ {
+			"question": "A box without treasure, key, or lid, yet golden treasure inside is hid. What am I?",
+			"choices": ["Egg", "Cheese", "Honey", "Lemon"],
+			"answer": "Egg"
+		}, {
+			"question": "What has roots as nobody sees, is taller than trees; up, up it goes, and yet it never grows?",
+			"choices": ["Mountain", "Tree", "Whale", "Building"],
+			"answer": "Mountain"
+		}, {
+			"question": "The bigger I get, the less there is. What am I?",
+			"choices": ["Hole", "Balloon", "Bathtub", "Rock"],
+			"answer": "Hole"
+		}, {
+			"question": "What walks on four legs in the morning, two legs in the afternoon, and three legs in the evening?",
+			"choices": ["Man", "Giraffe", "Chicken", "Chair"],
+			"answer": "Man"
+		}
+	]
+};
