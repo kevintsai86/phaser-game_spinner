@@ -2,6 +2,7 @@
 'use strict';
 
 function Boot() {
+	var questionObj;
 }
 
 Boot.prototype = {
@@ -9,6 +10,8 @@ Boot.prototype = {
     this.load.image('preloader', 'assets/preloader.gif');
   },
   create: function() {
+  	this.questionObj = {"question":"","choices":"","answer":""};
+  	
     this.game.input.maxPointers = 1;
     this.game.state.start('preload');
   }

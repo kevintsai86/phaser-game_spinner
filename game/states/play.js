@@ -2,7 +2,9 @@
   'use strict';
   //adding spinner prefab
   // var Spinner = require('../prefabs/spinner.js');
-  function Play() {}
+console.log(this);
+  function Play() {
+  }
   Play.prototype = {
     create: function() {
       this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -47,7 +49,7 @@
         this.spinner.body.angularVelocity = 0;
         this.dsplyText.setText('The spinner has stopped at ' + this.spinner.body.angle);
         this.makeContBtn();
-        // this.dsplyText.events.onInputDown.add(this.nextQuestion, this);
+        // this.getQuestion();
         }
       }
     },
@@ -69,6 +71,14 @@
       this.continueBtn.anchor.setTo(0.5, 0.5);
       this.continueBtn.inputEnabled = true;
       this.continueBtn.events.onInputDown.add(this.nextQuestion, this);
+    },
+    getQuestion: function() {
+      $.getJSON("./assets/scripts/sample.json", function(result){
+        console.log(this);
+        Boot.questionObj.question = result.hello;
+        console.log("result: "+result.hello);
+        console.log("questionObj: "+questionObj.question);   
+      });
     },
     nextQuestion: function() {
       this.game.state.start('question');

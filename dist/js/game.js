@@ -11,16 +11,18 @@ window.onload = function () {
   game.state.add('menu', require('./states/menu'));
   game.state.add('play', require('./states/play'));
   game.state.add('preload', require('./states/preload'));
+  game.state.add('profile', require('./states/profile'));
   game.state.add('question', require('./states/question'));
   
 
   game.state.start('boot');
 };
-},{"./states/boot":2,"./states/gameover":3,"./states/menu":4,"./states/play":5,"./states/preload":6,"./states/question":7}],2:[function(require,module,exports){
+},{"./states/boot":2,"./states/gameover":3,"./states/menu":4,"./states/play":5,"./states/preload":6,"./states/profile":7,"./states/question":8}],2:[function(require,module,exports){
 
 'use strict';
 
 function Boot() {
+	var questionObj;
 }
 
 Boot.prototype = {
@@ -28,6 +30,8 @@ Boot.prototype = {
     this.load.image('preloader', 'assets/preloader.gif');
   },
   create: function() {
+  	this.questionObj = {"question":"","choices":"","answer":""};
+  	
     this.game.input.maxPointers = 1;
     this.game.state.start('preload');
   }
@@ -103,7 +107,9 @@ module.exports = Menu;
   'use strict';
   //adding spinner prefab
   // var Spinner = require('../prefabs/spinner.js');
-  function Play() {}
+console.log(this);
+  function Play() {
+  }
   Play.prototype = {
     create: function() {
       this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -148,7 +154,7 @@ module.exports = Menu;
         this.spinner.body.angularVelocity = 0;
         this.dsplyText.setText('The spinner has stopped at ' + this.spinner.body.angle);
         this.makeContBtn();
-        // this.dsplyText.events.onInputDown.add(this.nextQuestion, this);
+        // this.getQuestion();
         }
       }
     },
@@ -170,6 +176,14 @@ module.exports = Menu;
       this.continueBtn.anchor.setTo(0.5, 0.5);
       this.continueBtn.inputEnabled = true;
       this.continueBtn.events.onInputDown.add(this.nextQuestion, this);
+    },
+    getQuestion: function() {
+      $.getJSON("./assets/scripts/sample.json", function(result){
+        console.log(this);
+        Boot.questionObj.question = result.hello;
+        console.log("result: "+result.hello);
+        console.log("questionObj: "+questionObj.question);   
+      });
     },
     nextQuestion: function() {
       this.game.state.start('question');
@@ -218,57 +232,103 @@ Preload.prototype = {
 module.exports = Preload;
 
 },{}],7:[function(require,module,exports){
+
+'use strict';
+
+function Profile() {
+}
+
+Profile.prototype = {
+  
+  create: function() {
+    this.playerName = '';
+    this.playerAge = '';
+    this.playerSex = '';
+  }
+};
+
+module.exports = Profile;
+
+},{}],8:[function(require,module,exports){
 'use strict';
 
 function Question() {}
 Question.prototype = {
 	preload: function () {
-		/*this.load.json('json', 'game/questions.json');
-		this.load.json('samplejson', 'game/sample.json');*/
+
 	},
 	create: function() {
-		var style = { font: '20px Arial', fill: '#ffffff', align: 'center'};
-		var resultStyle = { font: '32px Arial', fill: '#ffffff', align: 'center'};
+		var styly = { font: '20px Arial', fill: '#ffffff', align: 'center'};
 		/*this.picture = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'sample');
 		this.picture.anchor.setTo(0.5, 0.5);
 		this.picture.alpha = 0.3;*/
-		//next bit should parse the json file but it's not working...
-		// this.thing = JSON.parse(game.cache.getText)
-		/*game.cache._text['json'] = JSON.parse(game.cache.getText('json'));
-		this.questjson = JSON.parse(game.cache.getText('json').sample[0].question);
-		// var questions = game.cache.getText('json').sample[0].question;*/
 
-		// this.hello = game.cache.getJSON('samplejson');
-		/*$.getJSON("../assets/scripts/sample.json", function(result){
-	            this.samplejson += JSON.parse(result);
-	            console.log(this.samplejson);
-	    });*/
-
+		// console.log("outside: "+this.samplejson);
 		//holding variables
 		this.questions = 'A box without treasure, key, or lid, yet golden treasure inside is hid. What am I?';
-		this.choices =  ["Egg", "Cheese", "Honey", "Lemon"];
+		this.choices = ["Egg", "Cheese", "Honey", "Lemon"];
 		this.answers = 'Egg';
 
 		// hardcode: outputs the choices onto screen
-		this.questText = this.game.add.text(this.game.world.centerX, 100, this.questions, style);
+		this.questText = this.game.add.text(this.game.world.centerX, 100, this.questions, styly);
     	this.questText.anchor.setTo(0.5, 0.5);
     	for (var i = 0; i < this.choices.length; i++){
-    		this.answ = this.game.add.text(100, 250 + (50 * i), i + '. ' + this.choices[i], style);
-    		// this.answ.events.onInputDown.add(this.checkAnswer(i), this);
+    		this.addChoice(i, styly);
     	}
+
+    	/*for (var num = 0; num < this.choices.length; i++) {
+		  this.textArray[num] = this.game.add.text(100, 250 + (50 * num), (num+1) + '. ' + this.choices[num], styly);
+		  this.textArray[num].name = this.choices;
+		  this.textArray[num].inputEnabled = true;
+		  this.textArray[num].events.onInputDown.add(this.dialogueNext, this);
+		}*/
 	},
 	update: function() {
-		if(this.game.input.activePointer.justPressed()) {
+		/*if(this.game.input.activePointer.justPressed()) {
       		this.nextSpin();
-    	}
+    	}*/
 	},
-	checkAnswer: function(i) {
-		if ( this.answ[i] === this.answers){
-			this.results = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Correct!', resultStyle);
-		}else{
-			this.results = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Incorrect...', resultStyle);
-		}
+	addChoice: function(num, style) {
+		this.answ = this.game.add.text(100, 250 + (50 * num), (num+1) + '. ' + this.choices[num], style);
+    	this.answ.inputEnabled = true;
+    	if (this.choices[num] === this.answers)
+    		this.answ.events.onInputDown.add(this.rightListener, this);
+    	else
+    		this.answ.events.onInputDown.add(this.wrongListener, this);
+    	
 	},
+	rightListener: function() {
+		console.log('rightlistener went off');
+		this.dsplyRight();
+	},
+	wrongListener: function() {
+		this.dsplyWrong();
+	},
+	dsplyRight: function() {
+		var resultStyle = { font: '32px Arial', fill: '#ffffff', align: 'center'};
+		this.results = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Correct!', resultStyle);
+		console.log('correct');
+		this.results.anchor.setTo(0.5, 0.5);
+	},
+	dsplyWrong: function() {
+		var resultStyle = { font: '32px Arial', fill: '#ffffff', align: 'center'};
+		this.results = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Incorrect...', resultStyle);
+		console.log('incorrect');
+		this.results.anchor.setTo(0.5, 0.5);
+	},
+	/*dialogueNext: function(text, pointer) {
+		var resultStyle = { font: '32px Arial', fill: '#ffffff', align: 'center'};
+ 		if (text.name === this.answers) { 
+ 			this.results = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Correct!', resultStyle);
+			console.log('correct');
+
+ 		}
+ 		else{
+ 			this.results = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Incorrect...', resultStyle);
+			console.log('incorrect');
+ 		}
+ 		this.results.anchor.setTo(0.5, 0.5);
+	},*/
 	nextSpin: function() {
 		this.game.state.start('play');
 	}
